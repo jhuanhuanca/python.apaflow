@@ -40,9 +40,26 @@ La respuesta incluye cabecera `X-Apa-Report` (JSON en base64) con conteos y adve
 ## Tests
 
 ```bash
-pip install pytest
+pip install -r requirements-dev.txt
 pytest tests/ -q
 ```
+
+## Producción
+
+Python **no requiere build**. En el servidor:
+
+```bash
+cp deploy/env/ai.production.env.example ai-service-python/.env
+# AI_ENV=production y AI_SERVICE_API_KEY obligatorio (mismo valor que Laravel)
+
+bash deploy/scripts/deploy-ai-from-git.sh
+```
+
+- systemd: `apaflow-ai` → `deploy/scripts/run-apaflow-ai.sh`
+- Laravel llama a `http://127.0.0.1:8001` con header `X-Internal-Api-Key`
+- Público: solo `https://ai.apaflow.shop/health`
+
+Ver `docs/DEPLOY.md`.
 
 ## Estructura
 

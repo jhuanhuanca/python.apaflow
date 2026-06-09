@@ -5,9 +5,15 @@ estructura, reordenado, citas, índice). Implementación completa vía colas/wor
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
-router = APIRouter(prefix="/v1/intelligence", tags=["intelligence"])
+from app.security import require_internal_api_key
+
+router = APIRouter(
+    prefix="/v1/intelligence",
+    tags=["intelligence"],
+    dependencies=[Depends(require_internal_api_key)],
+)
 
 
 @router.post("/format")

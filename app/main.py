@@ -44,6 +44,15 @@ if settings['cors_origins']:
 app.include_router(intelligence_router)
 
 
+@app.on_event('startup')
+def validate_production_config() -> None:
+    if settings['is_production'] and not settings['api_key']:
+        raise RuntimeError(
+            'AI_SERVICE_API_KEY es obligatorio cuando AI_ENV=production. '
+            'Copia deploy/env/ai.production.env.example → ai-service-python/.env',
+        )
+
+
 @app.get("/health")
 def health():
     return {"ok": True, "service": "ai-service-python", "apa_version": "7", "engine": "2.3.0"}
